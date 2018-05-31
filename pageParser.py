@@ -1,4 +1,3 @@
-import urllib.request
 import requests
 import os
 import re
@@ -25,13 +24,7 @@ def getMagnet(search):
     search=search.replace(' ','%20')
     URL='https://m.zhongziso.com/list/%s/1'%(search)
     req=requests.get(URL,headers=req_header)
-    if req.encoding == 'ISO-8859-1':
-        encodings = requests.utils.get_encodings_from_content(req.text)
-        if encodings:
-            encoding = encodings[0]
-        else:
-            encoding = req.apparent_encoding
-    text = req.content.decode(encoding, 'replace') 
+    text = req.content.decode('utf-8')
     #正则匹配磁力链接
     magnetRegex=r'magnet:[^"]+'
     magnetList=re.findall(magnetRegex,text)
@@ -52,9 +45,9 @@ def pageParser(URL,savePath):
     a=soup.find_all('div',class_='video')
 
     needInit=True
-    if(os.path.exists(savePath+'\\AV.html')):
+    if(os.path.exists(savePath+'\AV.html')):
         needInit=False
-    file=open(savePath+'\\AV.html','a+',encoding='utf-8')
+    file=open(savePath+'\AV.html','a+',encoding='utf-8')
     htmlwriter=HtmlWriter(file)
     if needInit==True:
         htmlwriter.initHtml()
